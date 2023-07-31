@@ -1,0 +1,11 @@
+- name: playbook
+  hosts: localhost
+  gather_facts: false
+  pre_tasks:
+    - include_vars: data/vars.yml
+  roles:
+    - terraform
+  vars:
+    nsx_manager: 'lab2-nsxtlmgr-1.harrythambi.cloud'
+    nsx_username: 'admin'
+    nsx_password: 'VMware1!VMware1!'

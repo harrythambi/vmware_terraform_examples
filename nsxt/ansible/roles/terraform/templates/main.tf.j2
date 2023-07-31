@@ -1,0 +1,64 @@
+{% for policy in policy_groups %}
+resource "nsxt_policy_group" "{{policy.group_name}}" {
+  display_name        = "{{policy.group_name}}"
+  description         = "{{policy.group_name}}"
+
+  criteria {
+    ipaddress_expression {
+      ip_addresses = {{policy.ip_addresses|to_json}}
+    }
+  }
+}
+{% endfor %}
+
+{% for service in policy_services %}
+resource "nsxt_policy_service" "{{service.service_name}}" {
+  display_name        = "{{service.service_name}}"
+  description         = "{{service.service_name}}"
+
+  l4_port_set_entry {
+    display_name      = "{{service.protocol}}"
+    protocol          = "{{service.protocol}}"
+    destination_ports = {{service.ports|to_json}}
+  }
+
+}
+{% endfor %}
+
+{% for dfw_policy in security_policies %}
+resource "nsxt_policy_security_policy" "{{dfw_policy.dfw_policy_name}}" {
+  display_name = "{{dfw_policy.dfw_policy_name}}"
+  description  = "{{dfw_policy.dfw_policy_name}}"
+
+  category   = "{{dfw_policy.category}}"
+  locked     = false
+  stateful   = true
+  tcp_strict = false
+
+{% for dfw_rule in dfw_policy.rules %}
+{% set dest_groups = [] %}
+{% for dest_group in dfw_rule.destination_groups %}
+{{dest_groups.append('nsxt_policy_group.'~dest_group~'.path')}}
+{% endfor %}
+{% set src_groups = [] %}
+{% for src_group in dfw_rule.source_groups %}
+{{src_groups.append('nsxt_policy_group.'~src_group~'.path')}}
+{% endfor %}
+{% set services = [] %}
+{% for service in dfw_rule.services %}
+{{services.append('nsxt_policy_service.'~service~'.path')}}
+{% endfor %}
+
+  rule {
+    display_name = "{{dfw_rule.rule_name}}"
+    description = "{{dfw_rule.rule_name}}"
+    destination_groups = [{{dest_groups|join(', ')}}]
+    source_groups = [{{src_groups|join(', ')}}]
+    services = [{{services|join(', ')}}]
+    action = "ALLOW"
+    logged = false
+    disabled = true
+  }
+{% endfor %}
+}
+{% endfor %}

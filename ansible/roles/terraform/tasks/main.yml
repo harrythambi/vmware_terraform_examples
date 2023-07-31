@@ -1,0 +1,19 @@
+- name: Main template
+  template:
+    src: templates/main.tf.j2
+    dest: main.tf
+
+- name: Providers template
+  template:
+    src: templates/providers.tf.j2
+    dest: providers.tf
+
+- name: Settings template
+  template:
+    src: templates/settings.tf.j2
+    dest: settings.tf
+
+# - name: Variables template
+#   template:
+#     src: templates/variables.tf.j2
+#     dest: variables.tf

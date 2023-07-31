@@ -1,0 +1,80 @@
+policy_groups: 
+  - group_name: "group01"
+    description: "group01"
+    ip_addresses:
+      - "8.8.8.8/32"
+      - "8.8.4.4/32"
+  - group_name: "group02"
+    description: "group02"
+    ip_addresses:
+      - "8.8.8.8/32"
+      - "8.8.4.4/32"
+
+policy_services:
+  - service_name: "service01"
+    description: "service01"
+    protocol: "TCP"
+    ports:
+      - "8080"
+      - "4440"
+  - service_name: "service02"
+    description: "service02"
+    protocol: "TCP"
+    ports:
+      - "8080"
+      - "4440"
+  - service_name: "service03"
+    description: "service03"
+    protocol: "TCP"
+    ports:
+      - "8080"
+      - "4440"
+security_policies:
+  - dfw_policy_name: "policy01"
+    description: "policy01"
+    category: "Application"
+    rules:
+      - rule_name: "rule01"
+        description: "rule01"
+        destination_groups:
+          - "group01"
+          - "group02"
+        source_groups:
+          - "group01"
+        services:
+          - "service01"
+        action: "ALLOW"
+      - rule_name: "rule02"
+        description: "rule02"
+        destination_groups:
+          - "group01"
+          - "group02"
+        source_groups:
+          - "group01"
+        services:
+          - "service01"
+        action: "ALLOW"        
+  - dfw_policy_name: "policy02"
+    description: "policy02"
+    category: "Application"
+    rules:
+      - rule_name: "rule01"
+        description: "rule01"
+        destination_groups:
+          - "group01"
+          - "group02"
+        source_groups:
+          - "group01"
+        services:
+          - "service01"
+        action: "ALLOW"
+      - rule_name: "rule02"
+        description: "rule02"
+        destination_groups:
+          - "group01"
+          - "group02"
+        source_groups:
+          - "group01"
+        services:
+          - "service01"
+        action: "ALLOW"                
